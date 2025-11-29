@@ -1,14 +1,38 @@
 <Project DefaultTargets="Build">
+  <!-- Make the solution filter configurable; default only picks folders named 5-1* -->
+  <PropertyGroup>
+    <!-- You can override this with: msbuild buildAllSlns.proj /p:SolutionFilter="**\MyFolder\**\*.sln" -->
+    <SolutionFilter>**\5-1*\**\*.sln</SolutionFilter>
+
+    <!-- Specify target framework for Publish. Set to net8.0 since the project targets net8.0. -->
+    <TargetFrameworkForPublish>net8.0</TargetFrameworkForPublish>
+
+    <!-- Build the Properties string to pass to MSBuild for Publish.
+         Note: Do not pass Platform or output path at solution level to avoid NETSDK1194 warning. -->
+    <_PublishExtraProps Condition="'$(TargetFrameworkForPublish)' != ''">;TargetFramework=$(TargetFrameworkForPublish)</_PublishExtraProps>
+    <PublishProperties>Configuration=Release$(_PublishExtraProps)</PublishProperties>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Solution Include="**\*.sln" />
+    <!-- Only include solutions under folders that start with '5-1' -->
+    <Solution Include="$(SolutionFilter)" />
   </ItemGroup>
+
   <Target Name="Build">
-    <MSBuild Projects="@(Solution)" Targets="Build" Properties="Configuration=Release;Platform=Any CPU;v=m" />
+    <MSBuild Projects="@(Solution)" Targets="Build" Properties="Configuration=Release" />
   </Target>
+
   <Target Name="restore">
-    <MSBuild Projects="@(Solution)" Targets="restore" Properties="Configuration=Release;Platform=Any CPU;v=m"/>
+    <MSBuild Projects="@(Solution)" Targets="restore" Properties="Configuration=Release"/>
   </Target>
+
   <Target Name="clean">
-    <MSBuild Projects="@(Solution)" Targets="clean" Properties="Configuration=Release;Platform=Any CPU;v=m" />
+    <MSBuild Projects="@(Solution)" Targets="clean" Properties="Configuration=Release" />
+  </Target>
+
+  <Target Name="Publish">
+    <MSBuild Projects="@(Solution)"
+             Targets="Publish"
+             Properties="$(PublishProperties)" />
   </Target>
 </Project>
