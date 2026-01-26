@@ -1,7 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+  <!--
+    Note: If you run `dotnet publish` from a parent folder that contains multiple projects you'll get:
+      MSBUILD : error MSB1011: Specify which project or solution file to use...
+    Publish explicitly using the project file. From the repo root (c:\Users\chris\git\Stairway-to-Entra\):
+      dotnet publish ./5-WebApp-AuthZ/5-1-Roles/WebApp-OpenIDConnect-DotNet.csproj -c Release -f net8.0 -o ./publish
+    Or change directory to the project folder and run:
+      cd 5-WebApp-AuthZ/5-1-Roles && dotnet publish -c Release -f net8.0 -o ../../publish
+    Always check your current directory with `pwd` (PowerShell) or `echo %cd%` (Command Prompt).
+  -->
+
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>aspnet-WebApp_OpenIDConnect_DotNet-81EA87AD-E64D-4755-A1CC-5EA47F49B5D8</UserSecretsId>
     <WebProject_DirectoryAccessLevelKey>0</WebProject_DirectoryAccessLevelKey>
   </PropertyGroup>
